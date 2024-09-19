@@ -2,6 +2,10 @@ const {job_model,user_model}=require("../connect")
 require("dotenv").config()
 const jwt=require("jsonwebtoken")
 const  CustomError  = require("../customError")
+let x="hey"
+console.log(x)
+let y="say"
+console.log(y)
 
 let get_func_jobs=async (req,res)=>{
     console.log("getting")
@@ -75,8 +79,6 @@ let delete_func_jobs=async(req,res)=>{
         let deleted=await user_model.findOneAndUpdate({_id:userId},{$pull:{jobs:{_id:jobId}}})
         console.log("done deleting",deleted)
         console.log(jobId,userId)
-
-        console.log(data)
         res.status(200).json(deleted)
     }catch(err){
         console.log(err)
@@ -93,15 +95,15 @@ let get_func_users=async (req,res)=>{
 let post_func_users=async(req,res)=>{
     try{
         console.log("signining up!")
-        let {userId,password}=req.body
-
- 
+        let {userName,password}=req.body
         let user=await user_model.create(req.body)
         console.log("created",user)
         res.status(200).json({status:200,user:user})
     }catch(err){
         
         if (err.code === 11000) {
+            console.log(err)
+            console.log("heyjude")
             let customErr=new CustomError("Email Registered Already",11000)
             console.log(customErr.message)
             res.status(400).json({status:customErr.status, message:customErr.message});
@@ -115,16 +117,16 @@ let post_func_users=async(req,res)=>{
 }
 let post_auth=async(req,res)=>{
     try{
-        let {userId,password}=req.body
+        let {userName,password}=req.body
     console.log(process.env.SECRET_KEY)
-    const token =jwt.sign(userId,process.env.SECRET_KEY)
-    let matchedData=await user_model.find({"userId":userId})
+    const token =jwt.sign(userName,process.env.SECRET_KEY)
+    let matchedData=await user_model.findOne({"userName":userName})
     console.log(matchedData)
-    if(matchedData===[]){
+    if(matchedData==null){
         throw new CustomError("Email id not registered",400)
     }else{
-    if(matchedData[0].password===password){
-        res.status(200).json({status:200,token:token,id:matchedData[0]._id,user:matchedData[0]})
+    if(matchedData.password===password){
+        res.status(200).json({status:200,token:token,id:matchedData._id,user:matchedData})
     }else{
         throw new CustomError("sorry wrong password",400)
     }}
