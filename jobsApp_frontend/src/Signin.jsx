@@ -6,22 +6,22 @@ export default function Signin(prop){
     const isSignin=useContext(signinContext)
     const chngSignIn=useContext(chngSigninContext)
     const chngUsername=useContext(chngUsernameContext)
-    
     console.log(isSignin)
-
     const history=useNavigate()
     const [is_reg,set_is_reg]=useState(true)
+    const [errMessage,setErrMessage]=useState()
     console.log("vfdv")
     async function sendData(fetchUrl,postData){
-            console.log("post")
+            
             try{
+                console.log(fetchUrl)
                 let response=await fetch(fetchUrl,{
                 method:"POST",
                 headers:{"Content-type":"application/json"},
                 body: JSON.stringify(postData)})
                 let res=await response.json()
 
-                chngUsername(res.user.name)
+                
                 return res
             }catch(error){
                 console.log(error)
@@ -51,36 +51,25 @@ export default function Signin(prop){
 
    
                     let response_signin= await sendData("http://localhost:5555/users/signin",formDict)
-                    console.log()
+                    console.log(response_signin)
                     if(response_signin){
+                        chngUsername(response_signin.user.name)
+                        localStorage.setItem("UserName",response_signin.user.name)
                         console.log(response_signin.id)
                         let id=response_signin.id
                         localStorage.setItem("token",response_signin.token)
                         console.log(id)
                         history(`/jobs?userId=${id}`)
                         chngSignIn(true)
+                        localStorage.setItem("signIn",true)
                     }
                     
                 },[1000])
         }else{
-            
-            let userIdExists=document.getElementsByClassName("user_id_exists")[0]
-            setTimeout(()=>{
-                userIdExists.classList.remove("opacity-0")
-                userIdExists.classList.add("opacity-100")
-                userIdExists.classList.add("transition-opacity")
-                userIdExists.classList.add("duration-300")
-                
-            },[100])
-
-            setTimeout(()=>{
-                userIdExists.classList.remove("opacity-100")                
-                userIdExists.classList.add("opacity-0")
-            },[3000]) 
-
-            userIdExists.classList.remove("transition-opacity")
-            userIdExists.classList.remove("duration-300")
-          
+            console.log(response)
+            setErrMessage(()=>{
+                return response.message
+            })
         }
         
 }
@@ -99,31 +88,22 @@ export default function Signin(prop){
         console.log(formDict2)
         let response=await sendData("http://localhost:5555/users/signin",formDict2)
         console.log("ye",response)
-        if(response){
-        
+        if(response.status==200){
+            chngUsername(response.user.name)
+            localStorage.setItem("UserName",response.user.name)
                 console.log(response.token)
                 localStorage.setItem("token",response.token)
                 let id=response.id
                 console.log(id)
                 history(`/jobs?userId=${id}`)
                 chngSignIn(true)
+                localStorage.setItem("signIn",true)
             }else{
-                let wrong_pass=document.getElementsByClassName("wrong_password")[0]
-                setTimeout(()=>{
-                    wrong_pass.classList.remove("opacity-0")
-                    wrong_pass.classList.add("opacity-100")
-                    wrong_pass.classList.add("transition-opacity")
-                    wrong_pass.classList.add("duration-300")
-                    
-                },[100])
-
-                setTimeout(()=>{
-                    wrong_pass.classList.remove("opacity-100")                  
-                    wrong_pass.classList.add("opacity-0")                    
-                },[3000]) 
-
-                wrong_pass.classList.remove("transition-opacity")
-                wrong_pass.classList.remove("duration-300")
+                console.log(response.message)
+                setErrMessage(()=>{
+                    return response.message
+                })
+                
               
             }
        
@@ -140,6 +120,42 @@ export default function Signin(prop){
         })
     }
     
+    let blinkError=(errType)=>{
+        console.log(errType)
+        setTimeout(()=>{
+            errType.classList.remove("opacity-0")
+            errType.classList.add("opacity-100")
+            errType.classList.add("transition-opacity")
+            errType.classList.add("duration-300")
+            
+        },[100])
+
+        setTimeout(()=>{
+            errType.classList.remove("opacity-100")                  
+            errType.classList.add("opacity-0")                    
+        },[3000]) 
+
+        errType.classList.remove("transition-opacity")
+        errType.classList.remove("duration-300")
+    }
+
+    if(errMessage){
+        console.log("yo")
+        let err=document.getElementsByClassName("err")[0]
+        blinkError(err)
+    }
+
+        window.addEventListener("storage",(event)=>{
+            console.log("heyyhca")
+            let signIn=localStorage.getItem("signIn")
+
+           if(signIn==="true"){
+            history("/jobs")
+           }if(signIn==="false"){
+            history("/signin")
+           }
+        })
+
    
     return <main className="main flex flex-col justify-center items-center h-[61vh] ">
       
@@ -154,9 +170,9 @@ export default function Signin(prop){
       <input type="text" id="name" name="name" required className=" border-[rbg(0,10,0)] border-[0.5px] bg-[rgb(249,252,254)] w-[78%]"/>
       </div>
       }
-      <div className="userId flex flex-col  justify-between ">
-        <label htmlFor="userId" className='userId_label text-sm text-[12px] text-[#5E5E5E] font-semibold'>User Id:</label>
-        <input type="text" id="userId" name="userId" required className=" border-[rbg(0,10,0)] border-[0.5px] bg-[rgb(249,252,254)] w-[78%]"/>
+      <div className="userName flex flex-col  justify-between ">
+        <label htmlFor="userName" className='userName_label text-sm text-[12px] text-[#5E5E5E] font-semibold'>User Name:</label>
+        <input type="text" id="userName" name="userName" required className=" border-[rbg(0,10,0)] border-[0.5px] bg-[rgb(249,252,254)] w-[78%]"/>
         </div>
         <div className="password flex flex-col  justify-between">
         <label htmlFor="password" className='password_label text-sm text-[12px] text-[#5E5E5E] font-semibold'>Password:</label>
@@ -173,8 +189,7 @@ export default function Signin(prop){
             })
         }}> Signin</span></div>}
     </form>
-   {is_reg? <div className={
-`wrong_password mt-[20px] opacity-0 text-red-400`}>Wrong Password!
-    </div>:<div className="user_id_exists mt-[20px] opacity-0 text-red-400">User ID already exists!</div>}
+    <div className="err mt-[20px] opacity-0 text-red-400">{errMessage}
+    </div>
     </main>
 }

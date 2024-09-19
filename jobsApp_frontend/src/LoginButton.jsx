@@ -10,14 +10,21 @@ export default function LoginButton(){
       console.log(isSignin)
       console.log(username)
     console.log(isSignin)
+
     return <div className="w-[180px] flex flex-row justify-between">
     <span className='pt-[5px] pb-[5px]'>{(()=>{
       
-      return isSignin==true? `Hey ${username}`:"Hey User"
+      return  `Hey ${username}`
+      
     })()}</span>
-        <Link className='' to="/signin">
+        <Link className='' to={isSignin==true? `/`:`/signin`}>
     <button className='bg-[rgb(86,52,243)] pl-[10px] pr-[10px] pt-[5px] pb-[5px]' onClick={()=>{
-      return chngIsSignin(false)
+        chngIsSignin((false))
+      if(isSignin===true){
+        localStorage.setItem("signIn",false)
+      }
+
+    
     }}>{isSignin? "Sign Out":"Sign In"}</button></Link>
   </div>
     

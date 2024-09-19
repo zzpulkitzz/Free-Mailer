@@ -4,9 +4,11 @@ export const chngSigninContext=createContext()
 export const usernameContext=createContext()
 export const chngUsernameContext=createContext() 
 export default function SigninProvider({children}){
-
-    const [isSignin,setIsSignin]=useState(true)
-    const [username,setUsername]=useState(null)
+    console.log(localStorage.getItem("signIn"))
+    let isSignIn=localStorage.getItem("signIn")==undefined? true : localStorage.getItem("signIn")==="true"? true : false
+    let UserName=localStorage.getItem("UserName")==undefined? "" : localStorage.getItem("UserName") 
+    const [isSignin,setIsSignin]=useState(isSignIn)
+    const [username,setUsername]=useState(UserName)
     function chngIsSignin(value){
         setIsSignin(()=>{
                     
