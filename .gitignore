@@ -1,2 +1,2 @@
-jobsApp_backend/package-lock.json
-jobsApp_backend/package.json
+.env
+node_modules
