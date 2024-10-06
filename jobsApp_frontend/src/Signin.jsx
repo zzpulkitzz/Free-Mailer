@@ -6,6 +6,7 @@ export default function Signin(prop){
     const isSignin=useContext(signinContext)
     const chngSignIn=useContext(chngSigninContext)
     const chngUsername=useContext(chngUsernameContext)
+    
     console.log(isSignin)
     const history=useNavigate()
     const [is_reg,set_is_reg]=useState(true)
@@ -20,8 +21,6 @@ export default function Signin(prop){
                 headers:{"Content-type":"application/json"},
                 body: JSON.stringify(postData)})
                 let res=await response.json()
-
-                
                 return res
             }catch(error){
                 console.log(error)

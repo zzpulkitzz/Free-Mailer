@@ -1,6 +1,6 @@
 import {RouterProvider,createRoutesFromElements,createBrowserRouter,BrowserRouter , Routes,Route, Link,redirect,defer,Navigate} from 'react-router-dom'
 import Navbar from "./Navbar"
-import Welcome from './Welcome'
+import Welcome from "./Welcome"
 import Signin from "./Signin"
 
 import Jobs from "./Jobs"

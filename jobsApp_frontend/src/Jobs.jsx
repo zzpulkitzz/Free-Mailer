@@ -278,7 +278,7 @@ setMessage(message);
 
 
 
-  return <div><main className="main flex justify-center  h-[61vh]">
+  return <div><main className="main flex justify-center  h-[61vh] relative">
       
   <form className='form flex flex-col bg-white h-md:h-[320px] h-md:w-[330px] h-sm:w-[270px] h-sm:h-[51vh] shadow-md p-[15px] justify-between mt-[40px]'>
   <h1 className='flex justify-center items-start'>
@@ -324,7 +324,7 @@ setMessage(message);
  <footer style={{gridTemplateColumns:`repeat(${jobs.length>6?jobs.length:6}, minmax(120px, 1fr))`,display:"grid"}} className={` pl-[2vw] pr-[2vw]  h-[25vh] pb-[20px] w-[100vw] overflow-hidden `}>
     {jobs_html}
  </footer>
- {is_edit===null? null: <div className=" pl-[20px] shadow-lg  h-[320px] w-[330px] absolute bg-[white] top-[50vh] left-[50vw] pt-[10px]">
+ {is_edit===null? null: <div className=" pl-[20px] shadow-lg  h-[320px] w-[330px] absolute bg-[white] top-[104px] left-[calc(50vw-165px)] pt-[10px]">
     <div className="close_container flex justify-end pr-[10px]" onClick={()=>{
         set_is_edit(()=>{
             return null
@@ -369,7 +369,7 @@ setMessage(message);
     </form>
     </div>}
     {isCompose?
-        <Card className="w-full max-w-2xl mx-auto absolute top-[10vh] left-[10vw]">
+        <Card className="w-full max-w-2xl mx-auto absolute top-[68px]   left-[15vw]">
         <CardHeader className="bg-gray-100 border-b">
           <h2 className="text-lg font-semibold">New Message</h2>
         </CardHeader>
@@ -405,11 +405,19 @@ setMessage(message);
           </div>
         </CardContent>
         <CardFooter className="flex justify-between items-center bg-gray-100 border-t">
+          <div className='flex flex-row w-[200px] justify-between'>
           <Button className="bg-blue-500 hover:bg-blue-600 mt-[20px]" onClick={()=>{
             sendEmail()}}>
             <Send className="w-4 h-4 mr-2" />
             Send
           </Button>
+          <Button className="bg-red-500 hover:bg-red-600 mt-[20px]" onClick={()=>{
+            setIsCompose(false)
+            }}>
+        
+            Abort
+          </Button>
+          </div>
           <Button variant="outline " className="mt-[20px]">
             <Paperclip className="w-4 h-4 mr-2" />
             Attach
