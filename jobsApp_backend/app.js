@@ -25,6 +25,15 @@ app.use(express.urlencoded({extended:false}))
 app.use("/",routerJobs)
 app.use("/users",routerUsers,routerAuth)
 
+if (process.env.NODE_ENV === 'production') {
+    const path = require('path');
+    app.use(express.static(path.join(__dirname, '../jobs_frontend/dist')));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+    });
+  }
+  
 app.get("/",async (req,res,next)=>{
     console.log("yo")
     
