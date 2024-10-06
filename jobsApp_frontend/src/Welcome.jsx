@@ -17,8 +17,6 @@ export default function Welcome() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const isSignin=useContext(signinContext)
-  const chngSignIn=useContext(chngSigninContext)
   const chngUsername=useContext(chngUsernameContext)
   const history=useNavigate()
   const handleSubmit = () => {
@@ -63,8 +61,6 @@ export default function Welcome() {
       let id=response.user._id
       history(`/jobs?userId=${id}`)
     }
-
-    
   }
   return (
     <div className="flex flex-col min-h-[90vh] bg-white">
