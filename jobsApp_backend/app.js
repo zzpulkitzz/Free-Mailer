@@ -91,7 +91,7 @@ let start=async()=>{
     try{
         await connect(process.env.USER_KEY)
         app.listen(process.env.PORT,()=>{
-            console.log("server running")
+            console.log("server runninger")
         })
         console.log("Connected")
        
