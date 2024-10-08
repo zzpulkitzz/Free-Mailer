@@ -52,7 +52,7 @@ export default function Welcome() {
         formDict2[key]=value
     }
     console.log(formDict2)
-    const response=await sendData("http://localhost:5555/users/signup",formDict2)
+    const response=await sendData("https://jobs-app-y9bs.onrender.com/users/signup",formDict2)
     console.log(response)
     if(response){
       console.log("succesful response")

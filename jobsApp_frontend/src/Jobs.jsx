@@ -64,7 +64,7 @@ setMessage(message);
     
     console.log(message);
     try{
-      let response=await fetch(`http://localhost:5555/send?email=${companyEmail}`,{
+      let response=await fetch(`https://jobs-app-y9bs.onrender.com/send?email=${companyEmail}`,{
       method:"POST",
       headers:{"Content-type":"text/plain" },
       body: message})
@@ -82,7 +82,7 @@ setMessage(message);
   useEffect(()=>{
     let getComp=async ()=>{
         try{
-            let response=await fetch(`http://localhost:5555/email`,{headers:{"authorization":`Bearer ${token}`}})
+            let response=await fetch(`https://jobs-app-y9bs.onrender.com/email`,{headers:{"authorization":`Bearer ${token}`}})
         let res=await response.json();
 
         setCompaniesData(res)
@@ -103,7 +103,7 @@ setMessage(message);
     try{
         console.log("getting")
 
-      let response=await fetch(`http://localhost:5555/jobs?seacrhExpKey=${searchExp}&userId=${userId}`,{headers:{"authorization":`Bearer ${token}`}})
+      let response=await fetch(`https://jobs-app-y9bs.onrender.com/jobs?seacrhExpKey=${searchExp}&userId=${userId}`,{headers:{"authorization":`Bearer ${token}`}})
       let list_temp =await response.json()
       console.log(typeof list_temp)
       setJobs(list_temp)
@@ -123,7 +123,7 @@ setMessage(message);
   async function sendData(form){
     console.log("post")
     try{
-        let response=await fetch(`http://localhost:5555/jobs?userId=${userId}`,{
+        let response=await fetch(`https://jobs-app-y9bs.onrender.com/jobs?userId=${userId}`,{
         method:"POST",
         headers:{"Content-type":"application/json","authorization":`Bearer ${token}` },
         body: JSON.stringify(form)})
@@ -238,7 +238,7 @@ setMessage(message);
 
             try{
                
-                let response=await fetch(`http://localhost:5555/jobs?jobId=${is_edit._id}&userId=${userId}`,{
+                let response=await fetch(`https://jobs-app-y9bs.onrender.com/jobs?jobId=${is_edit._id}&userId=${userId}`,{
                 method:action.toUpperCase(),
                 headers:{"Content-type":"application/json","authorization":`Bearer ${token}`},
                 body: JSON.stringify(EDformDict2)

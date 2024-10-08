@@ -37,7 +37,7 @@ export default function Signin(prop){
             formDict2[key]=value
         }
         console.log(formDict2)
-        const response=await sendData("http://localhost:5555/users/signup",formDict2)
+        const response=await sendData("https://jobs-app-y9bs.onrender.com/users/signup",formDict2)
         let formDict={}
         if(response && response.status==200){
                 Object.keys(formDict2).filter((elem)=>elem!="name").map((key)=>{
@@ -49,7 +49,7 @@ export default function Signin(prop){
                 setTimeout(async ()=>{
 
    
-                    let response_signin= await sendData("http://localhost:5555/users/signin",formDict)
+                    let response_signin= await sendData("https://jobs-app-y9bs.onrender.com/users/signin",formDict)
                     console.log(response_signin)
                     if(response_signin){
                         chngUsername(response_signin.user.name)
@@ -85,7 +85,7 @@ export default function Signin(prop){
             formDict2[key]=value
         }
         console.log(formDict2)
-        let response=await sendData("http://localhost:5555/users/signin",formDict2)
+        let response=await sendData("https://jobs-app-y9bs.onrender.com/users/signin",formDict2)
         console.log("ye",response)
         if(response.status==200){
             chngUsername(response.user.name)
