@@ -10,11 +10,11 @@ export default function SigninProvider({children}){
     const [isSignin,setIsSignin]=useState(isSignIn)
     const [username,setUsername]=useState(UserName)
     function chngIsSignin(value){
-        setIsSignin(()=>{
-                    
+        setIsSignin(()=>{   
             return value
         })
     }
+    
     function chngUsername(value){
         setUsername(()=>{
             return value

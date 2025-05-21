@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useContext } from 'react'
-
+import {Link} from "react-router-dom"
 export default function Welcome() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -46,7 +46,6 @@ export default function Welcome() {
     let form=document.getElementsByClassName("form")[0]
     let formData=new FormData(form)
     let formItrt2=formData.entries()
-    console.log(formItrt2)
     let formDict2={}
     for(const [key,value] of formItrt2){
         formDict2[key]=value
@@ -127,7 +126,7 @@ export default function Welcome() {
           </form>
         </div>
         <div className="w-full md:w-3/5 bg-white p-8 flex flex-col justify-center">
-          <h2 className="text-5xl font-bold mb-6 text-[rgb(86,52,243)] ">Automate Your Job Search</h2>
+          <h1 className="text-5xl font-bold mb-6 text-[rgb(86,52,243)] " >Automate Your Job Search</h1>
           <p className="text-2xl mb-6 text-gray-700">Jobbo helps you send personalized job applications to multiple companies with just a few clicks.</p>
          
         </div>

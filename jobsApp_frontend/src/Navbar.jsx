@@ -26,7 +26,7 @@ function Navbar() {
 
       <header className="bg-[rgb(86,52,243)]  text-white p-4">
         <div className="container mx-auto flex justify-between items-center ">
-          <h1 className="text-2xl font-bold ">Jobbo</h1>
+          <h1 className="text-2xl font-bold ">Free Mailer</h1>
           <nav className=" md:flex space-x-4 w-[50vw] flex flex-row justify-between ">
             <a href="#" className="hover:text-purple-200">Home</a>
             <a href="#" className="hover:text-purple-200">Features</a>
