@@ -1,15 +1,9 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
-import Jobs from "./Jobs"
 import {Outlet,Link} from "react-router-dom"
 import SigninProvider  from './SigninProvider.jsx'
-import {signinContext,chngSigninContext,usernameContext} from "./SigninProvider"
-import { useContext } from 'react'
 import LoginButtton from "./LoginButton"
-import { Mail, User, Lock, Send, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import {
   Sheet,
   SheetContent,
@@ -23,41 +17,29 @@ function Navbar() {
   return (
     <SigninProvider>
       <div>
-
-      <header className="bg-[rgb(86,52,243)]  text-white p-4">
-        <div className="container mx-auto flex justify-between items-center ">
-          <h1 className="text-2xl font-bold ">Free Mailer</h1>
-          <nav className=" md:flex space-x-4 w-[50vw] flex flex-row justify-between ">
-            <a href="#" className="hover:text-purple-200">Home</a>
-            <a href="#" className="hover:text-purple-200">Features</a>
-            <a href="#" className="hover:text-purple-200">Pricing</a>
-            <a href="#" className="hover:text-purple-200">Contact</a>
-          </nav>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <nav className="flex flex-col space-y-4">
-              <LoginButtton/>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
-
-      
-
-  
-
-
-      <Outlet />
-      
+        <header className="bg-white border-b border-gray-100 p-4 shadow-sm">
+          <div className="container mx-auto flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              {/* Paper plane icon (Heroicons or similar) */}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#5B9BFF" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21l16.5-9-16.5-9v7.5l11.25 1.5-11.25 1.5V21z" />
+              </svg>
+              <span className="text-xl font-bold text-[#5B9BFF]">FreeMailer</span>
+            </div>
+            <nav className="flex space-x-8 items-center">
+              <Link to="/" className="text-black font-medium hover:text-[#5B9BFF]">Home</Link>
+              <Link to="/features" className="text-black font-medium hover:text-[#5B9BFF]">Features</Link>
+              <Link to="/community" className="text-black font-medium hover:text-[#5B9BFF]">Community</Link>
+              <Link to="/contact" className="text-black font-medium hover:text-[#5B9BFF]">Contact Us</Link>
+            </nav>
+            
+            <Link className=" text-black font-semibold px-6 py-2 hover:text-[#5B9BFF] " to="/signin">Sign In</Link>
+            
+          </div>
+        </header>
+        <Outlet />
       </div>
-      </SigninProvider>
-      
+    </SigninProvider>
   )
 }
 

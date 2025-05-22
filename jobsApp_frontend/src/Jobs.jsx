@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Send, Paperclip } from "lucide-react"
-
+import { useNavigate } from 'react-router-dom'
 export default function Jobs() {
 
 
@@ -29,6 +29,8 @@ export default function Jobs() {
   const [companyEmail,setCompanyEmail]=useState()
   const [hrName,setHrName]=useState("")
   const [message,setMessage]=useState("")
+  const [resumeFileName,setResumeFileName]=useState("")
+  const navigate=useNavigate()
   for (const [key, value] of searchParams.entries()) {
     params.push({ key, value });
   }
@@ -81,15 +83,15 @@ setMessage(message);
   
   useEffect(()=>{
     let getComp=async ()=>{
-        try{
+        try{console.log("yoo")
             let response=await fetch(`https://jobs-app-y9bs.onrender.com/email`,{headers:{"authorization":`Bearer ${token}`}})
-        let res=await response.json();
-
-        setCompaniesData(res)
-        res=res.map((item)=>{
-            return item["companyName"].toLowerCase()
-        })
-        setCompList(res)
+            let res=await response.json();
+            console.log(res)
+            setCompaniesData(res)
+            res=res.map((item)=>{
+                return item["companyName"].toLowerCase()
+            })
+            setCompList(res)
         }catch(err){  
             console.log(err)
         }
@@ -137,32 +139,62 @@ setMessage(message);
         console.log(error)
     }}
 
-
+  // Helper to highlight empty fields
+  function highlightIfEmpty(ref) {
+    if (ref && ref.value.trim() === "") {
+      ref.classList.add("border-red-500", "ring-2", "ring-red-200");
+      setTimeout(() => {
+        ref.classList.remove("border-red-500", "ring-2", "ring-red-200");
+      }, 2000);
+    }
+  }
 
   async function onsubmit(event){
     event.preventDefault()
-    
     let form=document.getElementsByClassName("form")[0]
-        let formData=new FormData(form)
-        let formItrt2=formData.entries()
-        console.log(formItrt2)
-        let formDict2={}
-        for(const [key,value] of formItrt2){
-            formDict2[key]=value
-        }
-        
-        console.log(formDict2)
+    let formData=new FormData(form)
+    let formItrt2=formData.entries()
+    let formDict2={}
+    for(const [key,value] of formItrt2){
+        formDict2[key]=value
+    }
 
+    // Highlight empty fields
+    let companyName_input = document.getElementById("companyName");
+    let position_input = document.getElementById("position");
+    let resume_input = document.getElementById("resume");
+    let hasEmpty = false;
+    if (!companyName_input.value) {
+      highlightIfEmpty(companyName_input);
+      hasEmpty = true;
+    }
+    if (!position_input.value) {
+      highlightIfEmpty(position_input);
+      hasEmpty = true;
+    }
+    if (!resumeFileName) {
+      let label = document.querySelector('label[for="resume"]');
+      if (label) {
+        label.classList.add("text-red-500");
+        setTimeout(() => label.classList.remove("text-red-500"), 2000);
+      }
+      hasEmpty = true;
+    }
+    if (hasEmpty) return;
+    if (!userId){
+      navigate("/signin")
+      return
+    }
     await sendData(formDict2)
-    let companyName_input=document.getElementById("companyName")
-    let position_input=document.getElementById("position")
-    companyName_input.value=""
-    position_input.value=""
+    let companyName_input2=document.getElementById("companyName")
+    let position_input2=document.getElementById("position")
+    companyName_input2.value=""
+    position_input2.value=""
     setSelectedName("")
-    
     setTimeout(async ()=>{
         await getData()  
-    },1500)}
+    },1500)
+  }
   
   
 
@@ -255,8 +287,19 @@ setMessage(message);
         
          
     }
+
+  function handleFileUpload(e){
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setResumeFileName(selectedFile.name);
+    } else {
+      alert('Please upload a valid PDF file.');
+      e.target.value = null; // clear file input
+    }
+  };
+
     console.log(jobs)
-  let jobs_html=jobs.length===0 || jobs.acknowledged!==undefined ? null:jobs.map((elem)=>{
+  let jobs_html=jobs.value=="null" || jobs.acknowledged!==undefined ? null:jobs.map((elem)=>{
         return <div  className={`job_card bg-[white] flex flex-col justify-center items-center mt-[10px] mb-[10px] h-[150px]  bg-[rbg()] shadow-lg pl-[10px] pr-[10px]  text-nowrap mr-[2vw] overflow-scroll`} id={elem._id} key={elem._id} onClick={(event)=>{
             
             getCompanyEmail(elem.companyName)
@@ -278,50 +321,70 @@ setMessage(message);
 
 
 
-  return <div><main className="main flex justify-center  h-[61vh] relative">
-      
-  <form className='form flex flex-col bg-white h-md:h-[320px] h-md:w-[330px] h-sm:w-[270px] h-sm:h-[51vh] shadow-md p-[15px] justify-between mt-[40px]'>
-  <h1 className='flex justify-center items-start'>
-    
-    <span className='text-[22px]'>Jobs </span></h1>
-    <div className="name flex flex-col justify-between">
-    <label htmlFor="companyName" className='company_name_label text-sm text-[12px] text-[#5E5E5E] font-semibold'>Company Name:</label>
-      <input type="text" id="companyName" name="companyName" required className=" border-[rbg(0,10,0)] border-[0.5px] bg-[rgb(249,252,254)] ]" value={selectedName} onChange={(event)=>{
-        setSearchTerm(event.target.value)
-        setSelectedName(event.target.value)
-      }}/>
-
-      {searchTerm && (
-        <ul className="border border-gray-300 mt-2 p-2 rounded max-h-40 overflow-y-auto">
-          {
-          compList.filter(cname=>cname.startsWith(searchTerm)).map((item, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                item=item[0].toUpperCase() + item.slice(1,item.length)
-                setSelectedName(item)
-                setSearchTerm("")
+  return <div>
+    <main className="main flex justify-center items-center min-h-[80vh] bg-white">
+      <form className="form flex flex-col bg-white rounded-xl shadow-lg p-8 w-full max-w-md space-y-6">
+        <h1 className="text-2xl font-bold text-center mb-2">Compose Your Application</h1>
+        {/* Select Company */}
+        <div className="flex flex-col text-left">
+          <label htmlFor="companyName" className="mb-1 font-medium">Select Company</label>
+          <select
+            id="companyName"
+            name="companyName"
+            required
+            className="border border-gray-300 rounded-lg px-4 py-3 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            value={selectedName}
+            onChange={(event) => {
+              setSearchTerm(event.target.value)
+              setSelectedName(event.target.value)
             }}
-              className="p-2 cursor-pointer hover:bg-gray-200"
-            >
-              {item}
-            </li>
-          ))}
-          {compList.length === 0 && (
-            <li className="p-2">No items found</li>
-          )}
-        </ul>
-      )}
-      </div>
-      <div className="name flex flex-col justify-between">
-      <label htmlFor="position" className='position_label text-[12px] text-[#5E5E5E] font-semibold'>Position:</label>
-      <input type="text" id="position" name="position" required className="border-[rbg(0,10,0)] border-[0.5px] bg-[rgb(249,252,254)]"/>
-      </div>
+          >
+            <option value="">Select a company</option>
+            {compList?compList.map((cname, idx) => (
+              <option key={idx} value={cname}>{cname}</option>
+            )):null}
+          </select>
+        </div>
+        {/* Select Position */}
+        <div className="flex flex-col text-left">
+          <label htmlFor="position" className="mb-1 font-medium">Select Position</label>
+          <input
+            id="position"
+            name="position"
+            required
+            className="border border-gray-300 rounded-lg px-4 py-3 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+           
+            {/* ...other positions */}
 
-      <button type="submit " className='bg-[rgb(86,52,243)] text-[white]' onClick={onsubmit}>Submit</button>
-  </form>
-  </main>
- <footer style={{gridTemplateColumns:`repeat(${jobs.length>6?jobs.length:6}, minmax(120px, 1fr))`,display:"grid"}} className={` pl-[2vw] pr-[2vw]  h-[25vh] pb-[20px] w-[100vw] overflow-hidden `}>
+        </div>
+        {/* Upload Resume */}
+        <div className="flex flex-col text-left">
+          <label htmlFor="resume" className="mb-1 font-medium">Upload Resume <span className="text-gray-400 text-sm">(PDF only)</span></label>
+          <div className="flex items-center bg-blue-50 border border-gray-300 rounded-lg px-4 py-3">
+            <input
+              type="file"
+              id="resume"
+              name="resume"
+              accept="application/pdf"
+              className="hidden"
+              onChange={handleFileUpload} // <-- keep your file upload logic
+            />
+            <label htmlFor="resume" className="bg-[#5B9BFF] text-white px-4 py-2 rounded cursor-pointer font-semibold mr-4">Choose file</label>
+            <span className="text-gray-600 text-sm overflow-hidden">{resumeFileName || 'No file chosen'}</span>
+          </div>
+        </div>
+        {/* Generate Email Button */}
+        <button
+          type="submit"
+          className="w-full bg-[#3867f5] hover:bg-[#2952cc] text-white font-semibold py-3 rounded-lg text-lg flex items-center justify-center gap-2 shadow-md mt-2"
+          onClick={onsubmit}
+        >
+          <span className="inline-block">⚡</span> Generate Email
+        </button>
+      </form>
+    </main>
+    <footer style={{gridTemplateColumns:`repeat(${jobs.length>6?jobs.length:6}, minmax(120px, 1fr))`,display:"grid"}} className={` pl-[2vw] pr-[2vw]  h-[25vh] pb-[20px] w-[100vw] overflow-hidden `}>
     {jobs_html}
  </footer>
  {is_edit===null? null: <div className=" pl-[20px] shadow-lg  h-[320px] w-[330px] absolute bg-[white] top-[104px] left-[calc(50vw-165px)] pt-[10px]">
@@ -425,4 +488,5 @@ setMessage(message);
         </CardFooter>
       </Card>:null
     }
-    </div>}
+    </div>
+  }
