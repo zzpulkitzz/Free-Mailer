@@ -6,17 +6,8 @@ let {connect,job_model,user_model,email_model}=require("./connect.js")
 const cors=require("cors")
 const app=express()
 const { google } = require('googleapis');
-
-
-  
-  // Define email options
-  
-  
-  // Send email
-
-
-
-
+const { verifyFirebaseToken } = require('./controller/middleware');
+const { signIn_func } = require('./controller/functions');
 
 
 require("dotenv").config()
@@ -57,10 +48,16 @@ app.get("/email",async (req,res,next)=>{
     }})
 
 app.get("/auth/google", (req, res) => {
+        console.log("1")
+        console.log(process.env.GMAIL_CLIENT_ID)
         const url = oAuth2Client.generateAuthUrl({
           access_type: 'offline',
+          prompt: 'consent',
           scope: SCOPES,
         });
+
+        
+        console.log("2")
         res.redirect(url);
 });
 
@@ -71,16 +68,7 @@ app.get("/auth/google/callback", async (req, res) => {
     res.send("Authenticated! You can now send email.");
 });
 
-app.get("/send-email", async (req, res) => {
-    // (in production, use stored tokens per user)
-    
-    const mailOptions = {
-        from: "Your App <you@gmail.com>",
-        to: "hr@company.com",
-        subject: "Automated Application",
-        text: "Hello, please find my resume attached.",
-      };
-})
+
 
 
 app.post("/send",async (req,res,next)=>{
@@ -120,6 +108,8 @@ app.post("/send",async (req,res,next)=>{
     }})
     
 })
+
+app.get("/signin",verifyFirebaseToken,signIn_func)
 
 let start=async()=>{
     try{

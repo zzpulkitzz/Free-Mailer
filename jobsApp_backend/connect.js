@@ -19,9 +19,8 @@ let job_schema= new Schema({
     email:{type:String}
 })
 let user_schema=new Schema({
-    name:{type:String,required:[true,"provide the  name"],unique:false},
-    userName:{type:String,required:[true,"provide the userId"],unique:true},
-    password:{type:String,required:[true,"provide the password name"],unique:false},
+    id:{type:String,required:[true,"provide the userId"],unique:true},
+    userEmail:{type:String,required:[true,"provide the userId"],unique:true},
     jobs:[job_schema]
 })
 

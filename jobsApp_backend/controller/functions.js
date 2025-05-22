@@ -1,10 +1,11 @@
 const {job_model,user_model}=require("../connect")
+
 require("dotenv").config()
 const jwt=require("jsonwebtoken")
 const  CustomError  = require("../customError")
-let x="hey"
+
 console.log(x)
-let y="say"
+
 console.log(y)
 
 let get_func_jobs=async (req,res)=>{
@@ -85,60 +86,33 @@ let delete_func_jobs=async(req,res)=>{
     }
 }
 
-let get_func_users=async (req,res)=>{
-    let token=req.headers["authorization"].split(" ")[1]
-    jwt.verify(token,process.env.SECRET_KEY)
-    console.log("gettin")
-    let user=await user_model.find({})
-    req.status(200).json({user})
-}
-let post_func_users=async(req,res)=>{
+let signIn_func=async(req,res)=>{
     try{
-        console.log("signining up!")
-        let {userName,password}=req.body
-        let user=await user_model.create(req.body)
-        console.log("created",user)
-        res.status(200).json({status:200,user:user})
-    }catch(err){
-        
-        if (err.code === 11000) {
-            console.log(err)
-            console.log("heyjude")
-            let customErr=new CustomError("Email Registered Already",11000)
-            console.log(customErr.message)
-            res.status(400).json({status:customErr.status, message:customErr.message});
-        }else{
-            res.status(400).json(err)
-        console.log(err)
-        }
-        
-    }
+        let {uid,email}=req.body
     
-}
-let post_auth=async(req,res)=>{
-    try{
-        let {userName,password}=req.body
-    console.log(process.env.SECRET_KEY)
-    const token =jwt.sign(userName,process.env.SECRET_KEY)
-    let matchedData=await user_model.findOne({"userName":userName})
-    console.log(matchedData)
-    if(matchedData==null){
-        throw new CustomError("Email id not registered",400)
-    }else{
-    if(matchedData.password===password){
-        res.status(200).json({status:200,token:token,id:matchedData._id,user:matchedData})
-    }else{
-        throw new CustomError("sorry wrong password",400)
-    }}
-    }catch(err){
-        console.log("dsv",err)
-        res.status(400).json({status:400,message:err.message})
+        let matchedData=await user_model.findOne({"uid":uid})
+        console.log(matchedData)
+        if(matchedData==null){
+            user = new User({
+                uid: uid,
+                userEmail: email,
+                jobs:[]
+              });
+              await user.save();
+        }
+        res.status(200).json({ message: 'User synced', user })
     }
+    catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+      }
     
     
 
 }
+
+
 let errHandler=async (err,req,res)=>{
     console.log(err)
 }
-module.exports={get_func_jobs,post_func_jobs,delete_func_jobs,get_func_users,post_func_users,edit_func_jobs,post_auth,errHandler}
+module.exports={get_func_jobs,post_func_jobs,delete_func_jobs,edit_func_jobs,signIn_func,errHandler}
