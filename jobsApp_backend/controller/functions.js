@@ -1,12 +1,10 @@
-const {job_model,user_model}=require("../connect")
+const {user_model}=require("../connect")
 
 require("dotenv").config()
-const jwt=require("jsonwebtoken")
-const  CustomError  = require("../customError")
 
-console.log(x)
 
-console.log(y)
+
+
 
 let get_func_jobs=async (req,res)=>{
     console.log("getting")

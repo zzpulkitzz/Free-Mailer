@@ -15,7 +15,8 @@ app.use(cors())
 app.use(express.text())
 app.use(express.urlencoded({extended:false}))
 app.use("/",routerJobs)
-app.use("/users",routerUsers,routerAuth)
+
+
 
 const oAuth2Client = new google.auth.OAuth2(
     process.env.GMAIL_CLIENT_ID,

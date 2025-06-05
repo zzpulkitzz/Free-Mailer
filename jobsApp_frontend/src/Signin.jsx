@@ -42,7 +42,9 @@ export default function Signin(prop){
         let name= formData.get("name")
         let email= formData.get("email")
         let password= formData.get("password")
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(name,email,password)
+        const userCredential = await 
+        createUserWithEmailAndPassword(auth, email, password);
         const token = await getIdToken(userCredential.user);
         const uid=userCredential.user.uid
         const response = await sendData("https://jobs-app-y9bs.onrender.com/users/signin",{uid,email,token});
@@ -63,6 +65,7 @@ export default function Signin(prop){
         for(const [key,value] of formItrt2){
             formDict2[key]=value
         }
+        console.log("here")
         let response=await sendData("https://jobs-app-y9bs.onrender.com/users/signin",formDict2)
         if(response.status==200){
             chngUsername(response.user.name)
@@ -132,7 +135,7 @@ export default function Signin(prop){
             )}
             <div>
               <label htmlFor="userName" className="block text-sm font-medium text-black mb-1">Email address</label>
-              <input id="userName" name="userName" type="email" className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1ed760]" required />
+              <input id="email" name="email" type="email" className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1ed760]" required />
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-black mb-1">Password</label>
